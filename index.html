@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Surprise Untukmu 💗</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;overflow:hidden;height:100dvh;
+  background:radial-gradient(ellipse at center,#35072f,#13051d 55%,#020208);
+  color:white;font-family:Arial,sans-serif;
+  touch-action:manipulation;
+}
+#bg{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.center{
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;flex-direction:column;text-align:center;
+  padding:20px;z-index:2;
+}
+.tag{color:#ffb9e8;letter-spacing:4px;font-size:13px;margin-bottom:28px}
+.envelope{
+  position:relative;width:min(78vw,300px);height:190px;
+  cursor:pointer;filter:drop-shadow(0 0 22px #ff278a88);
+  transition:transform .3s;
+}
+.envelope:active{transform:scale(.96)}
+.back{
+  position:absolute;inset:0;border-radius:9px;
+  background:#ffb5dc;border:2px solid #ffe4f4;
+}
+.paper{
+  position:absolute;left:7%;bottom:5%;width:86%;height:88%;
+  background:#fff0fa;border-radius:8px;color:#d51677;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  opacity:0;transform:translateY(0);
+  transition:transform .8s .3s,opacity .3s .3s;
+}
+.paper h2{font-size:24px;margin:12px 0}
+.front{
+  position:absolute;inset:0;border-radius:8px;
+  background:linear-gradient(145deg,#ffb9df,#ff6bb6);
+  clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);
+  z-index:3;
+}
+.flap{
+  position:absolute;inset:0;z-index:4;
+  background:linear-gradient(#ffe2f2,#ff8bc9);
+  clip-path:polygon(0 0,100% 0,50% 60%);
+  transform-origin:top;
+  transition:transform .7s;
+}
+.seal{
+  position:absolute;z-index:5;left:50%;top:49%;
+  transform:translate(-50%,-50%);font-size:38px;
+  transition:opacity .2s;
+}
+.envelope.open .flap{transform:rotateX(180deg)}
+.envelope.open .seal{opacity:0}
+.envelope.open .paper{
+  opacity:1;transform:translateY(-75px);z-index:2;
+}
+.envelope.open .front{z-index:1}
+.hint{margin-top:35px;color:#ffc6eb;font-size:16px;animation:pulse 1.3s infinite}
+.sub{font-size:12px;color:#cda6c9;margin-top:12px}
+#surprise{
+  position:fixed;inset:0;z-index:8;
+  display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;padding:22px;
+  background:radial-gradient(ellipse,#4c0b45e8,#08020df5 75%);
+  opacity:0;visibility:hidden;transition:opacity .7s;
+}
+#surprise.show{opacity:1;visibility:visible}
+.bigheart{
+  font-size:clamp(100px,33vw,165px);line-height:1.2;
+  animation:beat .9s infinite;
+  filter:drop-shadow(0 0 28px #ff208e);
+}
+#surprise h1{
+  font-size:clamp(32px,9vw,46px);color:#ffb9e9;
+  text-shadow:0 0 20px #ff168e;margin:14px 0;
+}
+#surprise p{line-height:1.8;color:#ffe1f5;font-size:15px}
+button{
+  background:#ff32a744;border:1px solid #ff9de0;
+  color:white;border-radius:30px;padding:13px 22px;
+  margin-top:15px;font-size:15px;
+}
+.bubble{
+  position:fixed;z-index:7;pointer-events:none;
+  bottom:-70px;border:1px solid #ffd0f7cc;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:white;background:radial-gradient(circle at 30% 25%,#fff9,#ff45c555 40%,#8b00d622);
+  box-shadow:inset -5px -5px 12px #ff43d355,0 0 15px #ff39cb66;
+  animation:rise linear forwards;
+}
+@keyframes rise{
+  0%{transform:translateY(0) translateX(0) scale(.5);opacity:0}
+  12%{opacity:1}
+  100%{transform:translateY(-120vh) translateX(var(--dx)) scale(1.2);opacity:0}
+}
+@keyframes pulse{50%{opacity:.55;transform:scale(1.04)}}
+@keyframes beat{50%{transform:scale(1.12)}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="center" id="intro">
+  <div class="tag">♡ A LITTLE SURPRISE ♡</div>
+
+  <div class="envelope" id="env">
+    <div class="back"></div>
+    <div class="paper">
+      <div>♡ SURAT UNTUKMU ♡</div>
+      <h2>Aku Cinta Kamu</h2>
+      <div style="font-size:28px">💗</div>
+    </div>
+    <div class="front"></div>
+    <div class="flap"></div>
+    <div class="seal">💖</div>
+  </div>
+
+  <div class="hint" id="hint">💌 Sentuh amplopnya</div>
+  <div class="sub">Ada kejutan kecil buat kamu...</div>
+</div>
+
+<div id="surprise">
+  <div class="tag">♡ KHUSUS BUAT KAMU ♡</div>
+  <div class="bigheart">💖</div>
+  <h1>AKU CINTA KAMU</h1>
+  <p>
+    Ada satu hal yang ingin aku sampaikan...<br>
+    Kamu adalah seseorang yang istimewa. 💗<br><br>
+    Semoga hari-harimu selalu penuh<br>
+    kebahagiaan dan cinta. ✨
+  </p>
+  <button id="replay">💌 Ulangi Surprise</button>
+  <div class="sub">Sentuh layar untuk menebarkan lebih banyak love 💕</div>
+</div>
+
+<script>
+const env=document.getElementById('env');
+const intro=document.getElementById('intro');
+const surprise=document.getElementById('surprise');
+const hint=document.getElementById('hint');
+let opened=false;
+
+function bubble(x,y){
+  const b=document.createElement('div');
+  b.className='bubble';
+  const size=18+Math.random()*38;
+  b.style.width=size+'px';
+  b.style.height=size+'px';
+  b.style.left=(x-size/2)+'px';
+  b.style.bottom=(innerHeight-y-size/2)+'px';
+  b.style.setProperty('--dx',(Math.random()*180-90)+'px');
+  b.style.animationDuration=(3+Math.random()*4)+'s';
+  b.style.fontSize=size*.5+'px';
+  b.textContent=Math.random()>.25?'♥':'♡';
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),7500);
+}
+
+function burst(x,y,count=20){
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.textContent=['💗','💕','💖','💘','✨','♥'][Math.floor(Math.random()*6)];
+    el.style.cssText=`position:fixed;z-index:10;left:${x}px;top:${y}px;pointer-events:none;font-size:${16+Math.random()*24}px`;
+    document.body.appendChild(el);
+    const a=Math.random()*Math.PI*2;
+    const d=60+Math.random()*Math.max(innerWidth,innerHeight)*.45;
+    const dx=Math.cos(a)*d,dy=Math.sin(a)*d;
+    const anim=el.animate([
+      {transform:'translate(-50%,-50%) scale(.1)',opacity:0},
+      {transform:'translate(-50%,-50%) scale(1.3)',opacity:1,offset:.2},
+      {transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.6)`,opacity:0}
+    ],{duration:1100+Math.random()*900,easing:'ease-out'});
+    anim.onfinish=()=>el.remove();
+  }
+}
+
+function openSurprise(){
+  if(opened)return;
+  opened=true;
+  env.classList.add('open');
+  hint.textContent='💗 Tunggu kejutannya...';
+
+  // Ledakan cinta saat amplop dibuka
+  burst(innerWidth/2,innerHeight/2,65);
+  for(let i=0;i<35;i++){
+    setTimeout(()=>bubble(
+      innerWidth*.1+Math.random()*innerWidth*.8,
+      innerHeight*.2+Math.random()*innerHeight*.6
+    ),Math.random()*900);
+  }
+
+  setTimeout(()=>{
+    intro.style.transition='opacity .5s';
+    intro.style.opacity='0';
+    surprise.classList.add('show');
+
+    // Ledakan kedua ketika pesan cinta muncul
+    burst(innerWidth/2,innerHeight/2,85);
+    for(let i=0;i<65;i++){
+      setTimeout(()=>bubble(Math.random()*innerWidth,innerHeight*.4),i*35);
+    }
+  },1000);
+}
+
+env.addEventListener('click',openSurprise);
+
+document.getElementById('replay').addEventListener('click',e=>{
+  e.stopPropagation();
+  opened=false;
+  surprise.classList.remove('show');
+  intro.style.opacity='1';
+  env.classList.remove('open');
+  hint.textContent='💌 Sentuh amplopnya';
+});
+
+document.addEventListener('pointerdown',e=>{
+  if(e.target===env||env.contains(e.target))return;
+  if(e.target.id==='replay')return;
+  burst(e.clientX,e.clientY,14);
+  for(let i=0;i<4;i++){
+    bubble(e.clientX+(Math.random()-.5)*100,e.clientY);
+  }
+});
+
+// Gelembung love tetap mengambang
+setInterval(()=>bubble(Math.random()*innerWidth,innerHeight+10),500);
+
+// Latar belakang bintang berkilau
+const c=document.getElementById('bg');
+const ctx=c.getContext('2d');
+let stars=[];
+function resize(){
+  const d=Math.min(devicePixelRatio||1,2);
+  c.width=innerWidth*d;c.height=innerHeight*d;
+  c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';
+  ctx.setTransform(d,0,0,d,0,0);
+  stars=Array.from({length:100},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*1.7+.3,p:Math.random()*6.28
+  }));
+}
+addEventListener('resize',resize);resize();
+function draw(t){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(const s of stars){
+    ctx.globalAlpha=.2+.8*(.5+.5*Math.sin(t*.001+s.p));
+    ctx.fillStyle='#ffc8f0';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+</body>
+      </html>
